@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
-import { env } from "@/lib/env"
+import { serverEnv } from "@/lib/env.server"
 import { isProtectedPath } from "@/lib/constants/routes"
 
 function buildLoginRedirect(request: NextRequest) {
@@ -16,8 +16,8 @@ export async function middleware(request: NextRequest) {
   })
 
   const supabase = createServerClient(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    serverEnv.SUPABASE_URL,
+    serverEnv.SUPABASE_ANON_KEY,
     {
       cookies: {
         getAll() {
