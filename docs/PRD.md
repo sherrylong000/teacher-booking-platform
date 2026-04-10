@@ -2,8 +2,8 @@
 
 ## Teacher Booking Platform
 
-**Version:** 1.1.0
-**Last Updated:** 2026-04-08
+**Version:** 1.2.0
+**Last Updated:** 2026-04-10
 **Status:** In Progress
 
 ---
@@ -81,16 +81,13 @@ Goal: complete request → approval → confirm/cancel flow
 
 Goal: usable day-to-day by both teacher and students
 
-| Feature                                                              | Priority |
-| -------------------------------------------------------------------- | -------- |
-| Student dashboard: upcoming and past bookings                        | P0       |
-| Teacher dashboard: slot management + booking list with status filter | P0       |
-| Email: booking submitted (to teacher)                                | P0       |
-| Email: booking confirmed (to student)                                | P0       |
-| Email: booking cancelled (to both parties)                           | P0       |
-| Email: 24h reminder before lesson (to student)                       | P0       |
-| Admin dashboard: read all bookings, cancel bookings, view audit log  | P1       |
-| Loading states, empty states, error handling, toast feedback         | P1       |
+| Feature                                                                                 | Priority |
+| --------------------------------------------------------------------------------------- | -------- |
+| Student dashboard: upcoming and past bookings                                           | P0       |
+| Teacher dashboard: slot management + booking list with status filter                    | P0       |
+| Email: booking confirmed → student only (triggered when teacher approves after payment) | P0       |
+| Admin dashboard: read all bookings, cancel bookings, view audit log                     | P1       |
+| Loading states, empty states, error handling, toast feedback                            | P1       |
 
 ---
 
@@ -117,9 +114,14 @@ Goal: usable day-to-day by both teacher and students
 Student selects slot → booking created (pending) → slot reserved
     │
     ▼
-Teacher reviews in dashboard
-    ├── Approve → booking: confirmed, slot: booked, email to student
-    └── Reject  → booking: cancelled, slot: available, email to student
+Student pays offline (WeChat / bank transfer / cash — outside the system)
+    │
+    ▼
+Teacher confirms payment received → reviews in dashboard
+    ├── Approve → booking: confirmed, slot: booked
+    │              → system sends confirmation email to student
+    └── Reject  → booking: cancelled, slot: available
+                   → no email (teacher communicates directly)
 
 Cancellation (either party):
     Student → allowed while pending or confirmed
@@ -163,7 +165,6 @@ State transitions are enforced at the database level, not just the application l
 
 ### Phase 3
 
-- Teacher receives email when a booking is submitted
-- Student receives email on confirmation and cancellation
-- Student receives 24h reminder
+- Student receives one confirmation email when teacher approves the booking
 - Both dashboards reflect current booking state without manual refresh
+- Admin can view all bookings and audit log

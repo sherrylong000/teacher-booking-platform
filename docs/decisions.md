@@ -215,3 +215,26 @@ Accept frontend conversion logic in exchange for a single unambiguous representa
 - Every timestamp display requires a timezone conversion — a shared utility function is mandatory
 - Emails must state the timezone explicitly (e.g. "3:00 PM AEST") not just the time
 - The `time_slots` table stores a `timezone` column as the teacher's reference timezone for display context
+
+---
+
+## ADR-009: Offline payment, single confirmation email
+
+**Status:** Accepted
+**Date:** 2026-04-08
+
+**Context:**
+The platform is for a single teacher with a small student base. Payment processing adds significant complexity (Stripe integration, refund logic, webhook handling) with limited benefit at this scale. The teacher already handles payment informally.
+
+**Decision:**
+Payment happens entirely outside the system (WeChat, bank transfer, cash). The teacher confirms payment receipt manually, then approves the booking in the dashboard. One confirmation email is sent to the student on approval. No email on rejection — the teacher communicates directly.
+
+**Tradeoff:**
+Accept manual payment coordination in exchange for eliminating payment infrastructure entirely from v1.
+
+**Consequences:**
+
+- Only one transactional email type needed: `booking_confirmed` → student only
+- No refund logic required
+- Teacher dashboard must clearly surface pending bookings awaiting payment confirmation
+- Payment integration (Stripe) deferred to future backlog
